@@ -23,6 +23,7 @@ public class RepositoryImpl<T> implements Repository<T> {
 			transaction = session.beginTransaction();
 			session.save(t);
 			transaction.commit();
+			session.flush();
 			return true;
 		} catch (Exception e2) {
 			return false;
@@ -36,6 +37,7 @@ public class RepositoryImpl<T> implements Repository<T> {
 			transaction = session.beginTransaction();
 			session.delete(session.get(t.getClass(), id));
 			transaction.commit();
+			session.flush();
 			return true;
 		} catch (Exception e2) {
 			return false;
@@ -48,6 +50,7 @@ public class RepositoryImpl<T> implements Repository<T> {
 			transaction = session.beginTransaction();
 			session.merge(t);
 			transaction.commit();
+			session.flush();
 			return true;
 		} catch (Exception e2) {
 			return false;

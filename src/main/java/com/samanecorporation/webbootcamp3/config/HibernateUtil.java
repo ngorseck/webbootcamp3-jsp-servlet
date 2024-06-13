@@ -1,4 +1,5 @@
 package com.samanecorporation.webbootcamp3.config;
+import java.util.Map;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
@@ -25,15 +26,24 @@ public class HibernateUtil {
 		if (sessionFactory == null) {
 			try {
 				PropertiesReader reader = new PropertiesReader("database.properties"); 
+				Map<String, String> env = System.getenv();
+				String userProd = env.get("WEB_DB_USER");
+				String pwdProd = env.get("WEB_DB_PWD");
+				String urlDbProd = env.get("WEB_URL_DB_PWD");
 								
 				Configuration configuration = new Configuration();
 
  				Properties settings = new Properties();
 				settings.put(AvailableSettings.DRIVER, "com.mysql.jdbc.Driver");
-				settings.put(AvailableSettings.URL,
-						"jdbc:mysql://localhost:3306/securitydb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
-				settings.put(AvailableSettings.USER, reader.getProperty("db.username"));
-				settings.put(AvailableSettings.PASS, reader.getProperty("db.password"));
+				if ((userProd != null && !userProd.isBlank()) && (pwdProd != null && !pwdProd.isBlank()) && (urlDbProd != null && !urlDbProd.isBlank())) {
+					settings.put(AvailableSettings.URL, urlDbProd);
+					settings.put(AvailableSettings.USER, userProd);
+					settings.put(AvailableSettings.PASS, pwdProd);
+				} else {
+					settings.put(AvailableSettings.URL, "jdbc:mysql://localhost:3306/securitydb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
+					settings.put(AvailableSettings.USER, reader.getProperty("db.username"));
+					settings.put(AvailableSettings.PASS, reader.getProperty("db.password"));
+				}
 				settings.put(AvailableSettings.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
 				//cette ligne est très importante
 				settings.put(AvailableSettings.HBM2DDL_AUTO, "update");
