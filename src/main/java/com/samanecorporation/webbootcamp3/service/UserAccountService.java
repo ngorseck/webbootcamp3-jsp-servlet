@@ -3,6 +3,8 @@ package com.samanecorporation.webbootcamp3.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +48,7 @@ public class UserAccountService implements IUserAccountService {
 	}
 
 	@Override
+	@Transactional
 	public Optional<UserAccountDTO> save(UserAccountDTO userDto) {
 		boolean result = userDao.add(UserAccountMapper.toUserAccountEntity(userDto));
 		

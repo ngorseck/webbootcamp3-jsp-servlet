@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -14,45 +15,40 @@ import com.samanecorporation.webbootcamp3.config.HibernateUtil;
 public class RepositoryImpl<T> implements Repository<T> {
 	
 	private Session session = HibernateUtil.getSessionFactory().openSession();
-	Transaction transaction = null;
-	
 	
 	@Override
+	@Transactional
 	public boolean add(T t) {
 		try {
-			transaction = session.beginTransaction();
 			session.save(t);
-			transaction.commit();
-			session.flush();
 			return true;
 		} catch (Exception e2) {
+			session.flush();
 			return false;
 		}
 	}
 
 	@Override
+	@Transactional
 	public boolean delete(long id,T t) {
 				
 		try {
-			transaction = session.beginTransaction();
 			session.delete(session.get(t.getClass(), id));
-			transaction.commit();
-			session.flush();
 			return true;
 		} catch (Exception e2) {
+			session.flush();
 			return false;
 		}
 	}
 
 	@Override
+	@Transactional
 	public boolean update(T t) {
 		try {
-			transaction = session.beginTransaction();
 			session.merge(t);
-			transaction.commit();
-			session.flush();
 			return true;
 		} catch (Exception e2) {
+			session.flush();
 			return false;
 		}
 	}
@@ -78,5 +74,8 @@ public class RepositoryImpl<T> implements Repository<T> {
         return (T) session.get(t.getClass(), id);
 	}
 
-	
+	public Session getSession() {
+		return session;
+	}
+
 }

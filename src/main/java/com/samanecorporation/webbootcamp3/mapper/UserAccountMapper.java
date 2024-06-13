@@ -14,6 +14,7 @@ public class UserAccountMapper {
 		userEntity.setId(userDTO.getId());
 		userEntity.setEmail(userDTO.getEmail());
 		userEntity.setPassword(userDTO.getPassword());
+		userEntity.setState(userDTO.isState());
 		
 		return userEntity;
 	}
@@ -24,6 +25,7 @@ public class UserAccountMapper {
 		userDto.setId(userEntity.getId());
 		userDto.setEmail(userEntity.getEmail());
 		userDto.setPassword(userEntity.getPassword());
+		userDto.setState(userEntity.isState());
 		
 		return userDto;
 	}
