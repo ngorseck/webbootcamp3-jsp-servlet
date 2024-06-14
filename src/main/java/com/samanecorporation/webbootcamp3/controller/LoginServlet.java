@@ -2,6 +2,7 @@ package com.samanecorporation.webbootcamp3.controller;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Function;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.samanecorporation.webbootcamp3.dto.UserAccountDTO;
+import com.samanecorporation.webbootcamp3.exception.EntityNotFoundException;
 import com.samanecorporation.webbootcamp3.service.IUserAccountService;
 import com.samanecorporation.webbootcamp3.service.UserAccountService;
 
@@ -38,20 +40,17 @@ public class LoginServlet extends HttpServlet {
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
 		
-		try {
-			Optional<UserAccountDTO> user = userAccountService.login (email, password);
-			if (user.isPresent()) {
-				logger.info("Infos corrects");
-				resp.sendRedirect("welcome");
-			} else {
-				logger.warn("Infos incorrects");
-				
-			}
-			
-		} catch (Exception e) {
-			logger.error("Erruer", e);
-			resp.sendRedirect("login");
-		}
-		
+		  try { 
+			  Optional<UserAccountDTO> user = userAccountService.login (email, password); 
+			  if (user.isPresent()) { 
+				  logger.info("Infos corrects");
+				  resp.sendRedirect("welcome"); 
+			  } else { 
+				  logger.warn("Infos incorrects");
+			  }
+		  } catch (Exception e) { 
+			  logger.error("Erruer : {}", e.getMessage());
+			  resp.sendRedirect("login"); 
+		  } 	
 	}
 }
